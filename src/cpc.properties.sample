@@ -1,0 +1,30 @@
+# This is a sample of the ClassPathChecker configuration.
+# Put this file simply into the class folder of your application (e.g. flat into src)
+# This is optional, i.e. ClassPathChecker works also without this configuration using default setting
+# Remark: The not-commented entries are the default values if the respecting property is omitted.
+
+# System properties (which are all class paths) of the following keys are considered
+classPathKeys[0] = java.class.path
+classPathKeys[1] = sun.boot.class.path
+classPathKeys[2] = java.ext.dirs
+classPathKeys[3] = java.endorsed.dirs
+
+# Duplicate files with these extensions are reported
+outputExtensions[0] = class
+outputExtensions[1] = properties
+outputExtensions[2] = xml
+
+# Files with these extensions are regarded as archives
+archiveExtensions[0] = jar
+archiveExtensions[1] = zip
+
+# Further paths in which classes and archives are searched can be added
+# Example:
+# additionalArtifacts[0] = /Applications/Apache/apache-tomcat-7.0.23/lib/
+
+# Are ClassPathChecker messages printed out to the console?
+logToConsole = true
+
+# Defines the location of the log file. If omitted then no log file is written
+# Example:
+# logFileName =/Volumes/Braeburn/Entwicklung/Software/Sonstiges/ClassPathChecker/log/cpc.log
