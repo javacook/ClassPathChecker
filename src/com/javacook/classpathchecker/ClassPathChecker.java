@@ -337,7 +337,6 @@ public class ClassPathChecker {
 	/**
 	 * Zerteilt einen Klassenpfad durch Doppelpunkt bzw. Semikolon getrennt in seine Bestandteile.
 	 * @param pathChain Beispiel: "/Library/Java/Extensions:/System/Library/Java/Contents/Classes/jsse.jar"
-	 * @return
 	 */
 	protected List<String> splitPathChain(String pathChain) {
 		List<String> result = new ArrayList<String>();
