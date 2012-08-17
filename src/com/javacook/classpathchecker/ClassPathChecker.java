@@ -219,22 +219,22 @@ public class ClassPathChecker {
 			URL location = codeSource.getLocation();
 			if (location != null) {
 				String path = location.getFile();
-				// Beispiele: 
+				// Beispiele:
 				//      /C:/Development/Workspaces/INDIGO/ClassPathChecker/bin/ oder
 				//      /C:/Development/Workspaces/INDIGO/WGW2_wtp/WebContent/WEB-INF/lib/cpchecker.jar
-				// In der Regel endet dieser Pfad mit cpchecker.jar (solange das Jar, in dem sich die 
-				// Klasse ClassPathChecker befindet, so heißt). Es soll aber gerade das Verzeichnis 
-				// hinzugefuegt werden, in dem cpchecker.jar auch liegt, z.B. bei einer Web-Anwendung 
-				// das Verzeichnis /WEB-INF/lib Also schneidet man das Suffix ab. Ist es bereits ein 
-				// Verz. klappt der Code auch, da dann der Pfad mit Slash endet. Auch bei Windows gibt's 
-				// hier nur Slashes. 
+				// In der Regel endet dieser Pfad mit cpchecker.jar (solange das Jar, in dem sich die
+				// Klasse ClassPathChecker befindet, so heißt). Es soll aber gerade das Verzeichnis
+				// hinzugefuegt werden, in dem cpchecker.jar auch liegt, z.B. bei einer Web-Anwendung
+				// das Verzeichnis /WEB-INF/lib Also schneidet man das Suffix ab. Ist es bereits ein
+				// Verz. klappt der Code auch, da dann der Pfad mit Slash endet. Auch bei Windows gibt's
+				// hier nur Slashes.
 				int indexOfLastSlash = path.lastIndexOf("/");
 				if (indexOfLastSlash >= 0) {
 					path = path.substring(0, indexOfLastSlash);
 					artifactPathSet.add(path);
 				}
 				else {
-					// einzelnes Artifakt nicht hinzufuegen 
+					// einzelnes Artifakt nicht hinzufuegen
 				}
 			}
 		}
@@ -254,7 +254,7 @@ public class ClassPathChecker {
 
 
 	/**
-	 * Wandert rekursiv das Verzeichnis <code>basePath</code> durch und sucht dort nach Klassen (Endung .class)
+	 * Wandert rekursiv das Verzeichnis <code>basePath</code> durch und sucht dort nach Resourcen (alles, was kommt)
 	 * und nach Archiven (Endung .jar oder .zip) und fuegt die Klassen-Funde sukzessive der Map
 	 * <code>classToOccurence</code> hinzu.
 	 * @param basePath kann ein Verzeichnis sein aber auch eine einzelne Datei sein (.jar, .class)
@@ -366,8 +366,8 @@ public class ClassPathChecker {
 //        }
 
 		System.out.println(new ClassPathChecker().run().xmlReport());
-		
-		
+
+
 	}// main
 
 }
