@@ -1,18 +1,20 @@
 package com.javacook.util;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.TreeSet;
 
 public class PathSet extends TreeSet<String> {
 	private static final long serialVersionUID = -8757505877799051559L;
-	private final static String FILE_SEPARATOR 	= System.getProperty("file.separator"); // Bei Windows Backslash, ansonsten Slash:
-
 
 	@Override
 	public boolean add(String path) {
-		return super.add(normalizePath(path));
+		String normalizedPath = normalizePath(path);
+		return (normalizedPath != null)? super.add(normalizedPath) : false;
 	}
 
+	
 	@Override
 	public boolean addAll(Collection<? extends String> coll) {
 		boolean ok = true;
@@ -22,13 +24,16 @@ public class PathSet extends TreeSet<String> {
 		return ok;
 	}
 
+	
 	private String normalizePath(String path) {
 		if (path == null) return null;
 		path = path.trim();
-		while (path.endsWith(FILE_SEPARATOR)) {
-			path = StringUtils.truncSuffix(path, FILE_SEPARATOR);
+		if (path.length() == 0) return null;
+		try {
+			return new File(path).getCanonicalPath();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
-		return path;
 	}
 
 }

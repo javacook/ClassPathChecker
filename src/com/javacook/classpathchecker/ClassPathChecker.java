@@ -124,7 +124,13 @@ public class ClassPathChecker {
 			logger.log("...Success.");
 		} catch (Exception e) {
 			logger.log("...Failed!");
-			logger.log(e.toString());
+			StringBuilder sb = new StringBuilder();
+			sb.append(e).append(CRLF);
+			StackTraceElement[] stackTrace = e.getStackTrace();
+			for (StackTraceElement stackTraceElement : stackTrace) {
+				sb.append(stackTraceElement).append(CRLF);
+			}
+			logger.log(sb.toString());
 		}
 		return this;
 	}
@@ -212,11 +218,28 @@ public class ClassPathChecker {
 		if (codeSource != null) {
 			URL location = codeSource.getLocation();
 			if (location != null) {
-				artifactPathSet.add(location.getFile());
+				String path = location.getFile();
+				// Beispiele: 
+				//      /C:/Development/Workspaces/INDIGO/ClassPathChecker/bin/ oder
+				//      /C:/Development/Workspaces/INDIGO/WGW2_wtp/WebContent/WEB-INF/lib/cpchecker.jar
+				// In der Regel endet dieser Pfad mit cpchecker.jar (solange das Jar, in dem sich die 
+				// Klasse ClassPathChecker befindet, so heißt). Es soll aber gerade das Verzeichnis 
+				// hinzugefuegt werden, in dem cpchecker.jar auch liegt, z.B. bei einer Web-Anwendung 
+				// das Verzeichnis /WEB-INF/lib Also schneidet man das Suffix ab. Ist es bereits ein 
+				// Verz. klappt der Code auch, da dann der Pfad mit Slash endet. Auch bei Windows gibt's 
+				// hier nur Slashes. 
+				int indexOfLastSlash = path.lastIndexOf("/");
+				if (indexOfLastSlash >= 0) {
+					path = path.substring(0, indexOfLastSlash);
+					artifactPathSet.add(path);
+				}
+				else {
+					// einzelnes Artifakt nicht hinzufuegen 
+				}
 			}
 		}
 
-		// Alle Pfad nach Zugriff untersuchen und dann durchstoebern...
+		// Alle Pfade nach Zugriff bzw. Lesbarkeit untersuchen und dann durchstoebern...
 		for (String path : artifactPathSet) {
 			if (new File(path).exists()) {
 				artifactPaths.put(path, true);
@@ -267,8 +290,7 @@ public class ClassPathChecker {
 		while (resourceEntries.hasMoreElements()) {
 			ZipEntry resourceEntry = (ZipEntry) resourceEntries.nextElement();
 			String resourceName = resourceEntry.getName();
-			// Directories sollen nicht gesammelt werden - erkennbar am Suffix '/'.
-			// TODO: Ist das in Windows der Backslash?
+			// Directories sollen nicht gesammelt werden - erkennbar am Suffix '/' (auch bei Windows)
 			if (!resourceName.endsWith("/")) {
 				if (isResourceAccessable(resourceName)) {
 					resourceToOccurence.put(resourceName, archivePath);
@@ -344,6 +366,8 @@ public class ClassPathChecker {
 //        }
 
 		System.out.println(new ClassPathChecker().run().xmlReport());
+		
+		
 	}// main
 
 }

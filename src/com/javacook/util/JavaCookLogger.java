@@ -14,6 +14,10 @@ public class JavaCookLogger {
 	private boolean logToConsole = true;
 	private String logFileName;
 	private List<String> logEntries;
+	
+	/*-----------------------------------------------------------------------*\
+	 * constructors                                                          *
+	\*-----------------------------------------------------------------------*/
 
 	public JavaCookLogger(boolean logToConsole, String logFileName) {
 		this.logToConsole = logToConsole;
@@ -25,6 +29,10 @@ public class JavaCookLogger {
 		this(true, null);
 	}
 
+	
+	/*-----------------------------------------------------------------------*\
+	 * public methods                                                        *
+	\*-----------------------------------------------------------------------*/
 
 	public void log(String mess) {
 		if (logToConsole) {
@@ -47,9 +55,9 @@ public class JavaCookLogger {
 
 
 
-	/*----------------------------------------------------------------------------*\
-	 * internal methods                                                           *
-	\*----------------------------------------------------------------------------*/
+	/*-----------------------------------------------------------------------*\
+	 * internal methods                                                      *
+	\*-----------------------------------------------------------------------*/
 
 	private void append(String logFileName, String mess) {
 		if (logFileName == null)  throw new IllegalArgumentException("Argument 'logFileName' is null.");
@@ -70,12 +78,11 @@ public class JavaCookLogger {
 			}
 		}
 	}
-
-
-
-	/*----------------------------------------------------------------------------*\
-	 * main                                                                       *
-	\*----------------------------------------------------------------------------*/
+	
+	
+	/*-----------------------------------------------------------------------*\
+	 * main                                                                  *
+	\*-----------------------------------------------------------------------*/
 
 	public static void main(String[] args) {
 		JavaCookLogger logger = new JavaCookLogger(true, "/Volumes/Braeburn/Entwicklung/Software/Sonstiges/ClassPathChecker/log/cpc.log");

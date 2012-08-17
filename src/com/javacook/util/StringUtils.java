@@ -50,10 +50,10 @@ public class StringUtils {
 	}
 
 
-//	public static String replaceExceptLast(String str, char ch1, char ch2) {
-//
-//	}
 
+	/*-----------------------------------------------------------------------*\
+	 * main                                                                  *
+	\*-----------------------------------------------------------------------*/
 
 	public static void main(String[] args) {
 		System.out.println(StringUtils.truncPrefix("Meininghaus", "Mein"));
@@ -62,8 +62,6 @@ public class StringUtils {
 		for (Object key : System.getProperties().keySet()) {
 			System.out.println("Key = " + key + ", Value = " + System.getProperty((String)key));
 		}
-
-
 	}
 
 }

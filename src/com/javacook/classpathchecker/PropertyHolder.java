@@ -12,19 +12,19 @@ public class PropertyHolder implements PropertyHolderInterface {
 	public final String DEFAULT_PROP_FILE_NAME = "cpc.properties";
 
 	public final static String PROP_KEY_CLASS_PATH_KEYS 		= "	";
-	public final static String PROP_KEY_ARCHIVE_EXTENSIONS 		= "archiveExtensions";
-	public final static String PROP_KEY_OUTPUT_EXTENSIONS 		= "outputExtensions";
+	public final static String PROP_KEY_ARCHIVE_EXTENSIONS 	= "archiveExtensions";
+	public final static String PROP_KEY_OUTPUT_EXTENSIONS 	= "outputExtensions";
 	public final static String PROP_KEY_ADDITIONAL_ARTIFACTS 	= "additionalArtifacts";
-	public final static String PROP_KEY_LOG_TO_CONSOLE 			= "logToConsole";
-	public final static String PROP_KEY_LOG_FILE_NAME 			= "logFileName";
+	public final static String PROP_KEY_LOG_TO_CONSOLE 		= "logToConsole";
+	public final static String PROP_KEY_LOG_FILE_NAME 		= "logFileName";
 
-	private List<String> 	classPathKeys 		= new ArrayList<String>();
-	private List<String> 	archiveExtensions 	= new ArrayList<String>();
-	private List<String> 	outputExtensions 	= new ArrayList<String>();
-	private List<String>	additionalArtifacts	= new ArrayList<String>();
-	private boolean			logToConsole		= true;
+	private List<String> 	classPathKeys 			= new ArrayList<String>();
+	private List<String> 	archiveExtensions 		= new ArrayList<String>();
+	private List<String> 	outputExtensions 		= new ArrayList<String>();
+	private List<String>	additionalArtifacts		= new ArrayList<String>();
+	private boolean		logToConsole			= true;
 	private String			logFileName;
-	private boolean			usingDefaults		= true;
+	private boolean		usingDefaults			= true;
 	private String			propFileName;
 
 	private Properties properties = new Properties();
