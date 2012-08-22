@@ -19,7 +19,7 @@ import java.util.zip.ZipFile;
 
 import com.javacook.util.FileUtils;
 import com.javacook.util.JavaCookLogger;
-import com.javacook.util.MultiHashMap;
+import com.javacook.util.KeyToSetHashMap;
 import com.javacook.util.PathSet;
 import com.javacook.util.StringUtils;
 
@@ -52,7 +52,7 @@ public class ClassPathChecker {
 	/**
 	 * Hier werden alle Resourcen mit ihrem Vorkommen gesammelt
 	 */
-	private final MultiHashMap<String, String> resourceToOccurence = new MultiHashMap<String, String>();
+	private final KeyToSetHashMap<String, String> resourceToOccurence = new KeyToSetHashMap<String, String>();
 
 
 	/**
@@ -238,9 +238,9 @@ public class ClassPathChecker {
 				}
 			}
 		}
-
+		
 		// Alle Pfade nach Zugriff bzw. Lesbarkeit untersuchen und dann durchstoebern...
-		for (String path : artifactPathSet) {
+		for (String path : artifactPathSet.adjustedList()) {
 			if (new File(path).exists()) {
 				artifactPaths.put(path, true);
 				collect(path);
@@ -254,7 +254,7 @@ public class ClassPathChecker {
 
 
 	/**
-	 * Wandert rekursiv das Verzeichnis <code>basePath</code> durch und sucht dort nach Klassen (Endung .class)
+	 * Wandert rekursiv das Verzeichnis <code>basePath</code> durch und sucht dort nach Resourcen (alles, was kommt)
 	 * und nach Archiven (Endung .jar oder .zip) und fuegt die Klassen-Funde sukzessive der Map
 	 * <code>classToOccurence</code> hinzu.
 	 * @param basePath kann ein Verzeichnis sein aber auch eine einzelne Datei sein (.jar, .class)
@@ -365,7 +365,7 @@ public class ClassPathChecker {
 //            System.out.println(clazz);
 //        }
 
-		System.out.println(new ClassPathChecker().run().xmlReport());
+		System.out.println(new ClassPathChecker().run().xmlReport().save("C:/TEMP/cpc.log"));
 		
 		
 	}// main
