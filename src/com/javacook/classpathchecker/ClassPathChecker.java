@@ -19,7 +19,7 @@ import java.util.zip.ZipFile;
 
 import com.javacook.util.FileUtils;
 import com.javacook.util.JavaCookLogger;
-import com.javacook.util.MultiHashMap;
+import com.javacook.util.KeyToSetHashMap;
 import com.javacook.util.PathSet;
 import com.javacook.util.StringUtils;
 
@@ -52,7 +52,7 @@ public class ClassPathChecker {
 	/**
 	 * Hier werden alle Resourcen mit ihrem Vorkommen gesammelt
 	 */
-	private final MultiHashMap<String, String> resourceToOccurence = new MultiHashMap<String, String>();
+	private final KeyToSetHashMap<String, String> resourceToOccurence = new KeyToSetHashMap<String, String>();
 
 
 	/**
@@ -219,28 +219,28 @@ public class ClassPathChecker {
 			URL location = codeSource.getLocation();
 			if (location != null) {
 				String path = location.getFile();
-				// Beispiele:
+				// Beispiele: 
 				//      /C:/Development/Workspaces/INDIGO/ClassPathChecker/bin/ oder
 				//      /C:/Development/Workspaces/INDIGO/WGW2_wtp/WebContent/WEB-INF/lib/cpchecker.jar
-				// In der Regel endet dieser Pfad mit cpchecker.jar (solange das Jar, in dem sich die
-				// Klasse ClassPathChecker befindet, so heißt). Es soll aber gerade das Verzeichnis
-				// hinzugefuegt werden, in dem cpchecker.jar auch liegt, z.B. bei einer Web-Anwendung
-				// das Verzeichnis /WEB-INF/lib Also schneidet man das Suffix ab. Ist es bereits ein
-				// Verz. klappt der Code auch, da dann der Pfad mit Slash endet. Auch bei Windows gibt's
-				// hier nur Slashes.
+				// In der Regel endet dieser Pfad mit cpchecker.jar (solange das Jar, in dem sich die 
+				// Klasse ClassPathChecker befindet, so heißt). Es soll aber gerade das Verzeichnis 
+				// hinzugefuegt werden, in dem cpchecker.jar auch liegt, z.B. bei einer Web-Anwendung 
+				// das Verzeichnis /WEB-INF/lib Also schneidet man das Suffix ab. Ist es bereits ein 
+				// Verz. klappt der Code auch, da dann der Pfad mit Slash endet. Auch bei Windows gibt's 
+				// hier nur Slashes. 
 				int indexOfLastSlash = path.lastIndexOf("/");
 				if (indexOfLastSlash >= 0) {
 					path = path.substring(0, indexOfLastSlash);
 					artifactPathSet.add(path);
 				}
 				else {
-					// einzelnes Artifakt nicht hinzufuegen
+					// einzelnes Artifakt nicht hinzufuegen 
 				}
 			}
 		}
-
+		
 		// Alle Pfade nach Zugriff bzw. Lesbarkeit untersuchen und dann durchstoebern...
-		for (String path : artifactPathSet) {
+		for (String path : artifactPathSet.adjustedList()) {
 			if (new File(path).exists()) {
 				artifactPaths.put(path, true);
 				collect(path);
@@ -337,6 +337,7 @@ public class ClassPathChecker {
 	/**
 	 * Zerteilt einen Klassenpfad durch Doppelpunkt bzw. Semikolon getrennt in seine Bestandteile.
 	 * @param pathChain Beispiel: "/Library/Java/Extensions:/System/Library/Java/Contents/Classes/jsse.jar"
+	 * @return
 	 */
 	protected List<String> splitPathChain(String pathChain) {
 		List<String> result = new ArrayList<String>();
@@ -364,9 +365,9 @@ public class ClassPathChecker {
 //            System.out.println(clazz);
 //        }
 
-		System.out.println(new ClassPathChecker().run().xmlReport());
-
-
+		System.out.println(new ClassPathChecker().run().xmlReport().save("C:/TEMP/cpc.log"));
+		
+		
 	}// main
 
 }
