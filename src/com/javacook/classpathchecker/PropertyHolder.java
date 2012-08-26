@@ -15,6 +15,7 @@ public class PropertyHolder implements PropertyHolderInterface {
 	public final static String PROP_KEY_ARCHIVE_EXTENSIONS 	= "archiveExtensions";
 	public final static String PROP_KEY_OUTPUT_EXTENSIONS 	= "outputExtensions";
 	public final static String PROP_KEY_ADDITIONAL_ARTIFACTS 	= "additionalArtifacts";
+	public final static String PROP_KEY_EXCLUDE_ARTIFACTS 	= "excludeArtifacts";
 	public final static String PROP_KEY_LOG_TO_CONSOLE 		= "logToConsole";
 	public final static String PROP_KEY_LOG_FILE_NAME 		= "logFileName";
 
@@ -22,9 +23,10 @@ public class PropertyHolder implements PropertyHolderInterface {
 	private List<String> 	archiveExtensions 		= new ArrayList<String>();
 	private List<String> 	outputExtensions 		= new ArrayList<String>();
 	private List<String>	additionalArtifacts		= new ArrayList<String>();
-	private boolean		logToConsole			= true;
+	private List<String>	excludeArtifacts		= new ArrayList<String>();
+	private boolean			logToConsole			= true;
 	private String			logFileName;
-	private boolean		usingDefaults			= true;
+	private boolean			usingDefaults			= true;
 	private String			propFileName;
 
 	private Properties properties = new Properties();
@@ -83,6 +85,10 @@ public class PropertyHolder implements PropertyHolderInterface {
 		return additionalArtifacts;
 	}
 
+	public List<String> getExcludeArtifacts() {
+		return excludeArtifacts;
+	}
+
 	public List<String> getOutputExtensions() {
 		return outputExtensions;
 	}
@@ -138,6 +144,8 @@ public class PropertyHolder implements PropertyHolderInterface {
 			outputExtensions.add("properties");
 			outputExtensions.add("xml");
 		}
+
+		excludeArtifacts = getProperties(PROP_KEY_EXCLUDE_ARTIFACTS);
 
 		additionalArtifacts = getProperties(PROP_KEY_ADDITIONAL_ARTIFACTS);
 

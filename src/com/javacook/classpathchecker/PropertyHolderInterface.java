@@ -12,6 +12,8 @@ public interface PropertyHolderInterface {
 
 	List<String> getAdditionalArtifacts();
 
+	List<String> getExcludeArtifacts();
+
 	boolean logToConsole();
 
 	String getLogFileName();

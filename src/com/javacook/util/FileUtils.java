@@ -311,17 +311,34 @@ public class FileUtils
 	}
 
 
+	/**
+	 * Vervollstaendigt relative Pfad und entfernt z.B. auch (Back-)Slashes
+	 * am Ende.
+	 * @param path z.B. "Vollmer/"
+	 * @return z.B. "/Volumes/Braeburn/Entwicklung/Software/javacook/ClassPathChecker/Vollmer"
+	 */
+	public static String normalizePath(String path) {
+		if (path == null) return null;
+		path = path.trim();
+		if (path.length() == 0) return null;
+		try {
+			return new File(path).getCanonicalPath();
+		} catch (java.io.IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 
 
 	/*----------------------------------------------------------------------------*\
 	 * main                                                                       *
 	\*----------------------------------------------------------------------------*/
+
 	public static void main(String[] args) throws IOException
 	{
+
 		FileUtils fileUtils = new FileUtils();
 		System.out.println(fileUtils.rename("/Users/vollmer/leute.csv", "/Users/vollmer/guck.csv", true));
-
-
 
 //		long start = System.currentTimeMillis();
 //		Iterable<String> lines = fileUtils.read("G:/jiowa/trunk/msearch/src/test/resources/samples/vornamen50.txt");

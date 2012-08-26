@@ -20,7 +20,6 @@ import java.util.zip.ZipFile;
 import com.javacook.util.FileUtils;
 import com.javacook.util.JavaCookLogger;
 import com.javacook.util.KeyToSetHashMap;
-import com.javacook.util.PathSet;
 import com.javacook.util.StringUtils;
 
 public class ClassPathChecker {
@@ -67,6 +66,8 @@ public class ClassPathChecker {
 	 */
 	private PropertyHolderInterface propertyHolder;
 
+	private PathFilterInterface pathFilter;
+
 	private FileUtils fileUtils = new FileUtils();
 
 
@@ -86,16 +87,16 @@ public class ClassPathChecker {
 				logger = new JavaCookLogger();
 				throw new IllegalArgumentException("Argument 'propertyHolder' is null.");
 			}
-			else {
-				logger = new JavaCookLogger(propertyHolder.logToConsole(), propertyHolder.getLogFileName());
-				if (propertyHolder.usingDefaults()) {
-					logger.log("No property file found at '"  + propertyHolder.getPropFileName() + "' => using defaults.");
-				}
-				else {
-					logger.log("Properties loaded successfully from file '"  + propertyHolder.getPropFileName() + "'");
-				}
+			logger = new JavaCookLogger(propertyHolder.logToConsole(), propertyHolder.getLogFileName());
+			if (propertyHolder.usingDefaults()) {
+				logger.log("No property file found at '"  + propertyHolder.getPropFileName() + "' => using defaults.");
 			}
-		} catch (Exception e) {
+			else {
+				logger.log("Properties loaded successfully from file '"  + propertyHolder.getPropFileName() + "'");
+			}
+			pathFilter = new PathFilter(propertyHolder);
+		}
+		catch (Exception e) {
 			if (logger != null) {
 				logger.log("Exception occured while initializing ClassPathChecker:");
 				logger.log(e.toString());
@@ -187,12 +188,11 @@ public class ClassPathChecker {
 	 * internal methods                                                      *
 	\*-----------------------------------------------------------------------*/
 
-	protected void handleClassPaths() throws Exception {
-		if (propertyHolder == null) {
-			throw new IllegalStateException("Cannot process without properties.");
-		}
 
-		PathSet artifactPathSet = new PathSet();
+	protected void handleClassPaths() throws Exception {
+		if (propertyHolder == null) throw new IllegalStateException("Cannot process without properties.");
+
+		PathSet artifactPathSet = new PathSet(pathFilter);
 		List<String> classPathKeys = propertyHolder.getClassPathKeys();
 
 		if (classPathKeys != null) {
@@ -207,38 +207,38 @@ public class ClassPathChecker {
 			}
 		}
 
-		List<String> additionalArtifacts = propertyHolder.getAdditionalArtifacts();
-
-		if (additionalArtifacts != null) {
-			artifactPathSet.addAll(additionalArtifacts);
-		}
-
 		// Speziellen Pfad hinzufuegen (so bekommt man das Lib im WebSphere heraus)
 		CodeSource codeSource = ClassPathChecker.class.getProtectionDomain().getCodeSource();
 		if (codeSource != null) {
 			URL location = codeSource.getLocation();
 			if (location != null) {
 				String path = location.getFile();
-				// Beispiele: 
+				// Beispiele:
 				//      /C:/Development/Workspaces/INDIGO/ClassPathChecker/bin/ oder
 				//      /C:/Development/Workspaces/INDIGO/WGW2_wtp/WebContent/WEB-INF/lib/cpchecker.jar
-				// In der Regel endet dieser Pfad mit cpchecker.jar (solange das Jar, in dem sich die 
-				// Klasse ClassPathChecker befindet, so heiﬂt). Es soll aber gerade das Verzeichnis 
-				// hinzugefuegt werden, in dem cpchecker.jar auch liegt, z.B. bei einer Web-Anwendung 
-				// das Verzeichnis /WEB-INF/lib Also schneidet man das Suffix ab. Ist es bereits ein 
-				// Verz. klappt der Code auch, da dann der Pfad mit Slash endet. Auch bei Windows gibt's 
-				// hier nur Slashes. 
+				// In der Regel endet dieser Pfad mit cpchecker.jar (solange das Jar, in dem sich die
+				// Klasse ClassPathChecker befindet, so heiﬂt). Es soll aber gerade das Verzeichnis
+				// hinzugefuegt werden, in dem cpchecker.jar auch liegt, z.B. bei einer Web-Anwendung
+				// das Verzeichnis /WEB-INF/lib Also schneidet man das Suffix ab. Ist es bereits ein
+				// Verz. klappt der Code auch, da dann der Pfad mit Slash endet. Auch bei Windows gibt's
+				// hier nur Slashes.
 				int indexOfLastSlash = path.lastIndexOf("/");
 				if (indexOfLastSlash >= 0) {
 					path = path.substring(0, indexOfLastSlash);
 					artifactPathSet.add(path);
 				}
 				else {
-					// einzelnes Artifakt nicht hinzufuegen 
+					// einzelnes Artifakt nicht hinzufuegen
 				}
 			}
 		}
-		
+
+		// Alle die "von Hand" in den cpc.properties hinterlegten Zusatzpfade hinzufügen
+		List<String> additionalArtifacts = propertyHolder.getAdditionalArtifacts();
+		if (additionalArtifacts != null) {
+			artifactPathSet.addAll(additionalArtifacts);
+		}
+
 		// Alle Pfade nach Zugriff bzw. Lesbarkeit untersuchen und dann durchstoebern...
 		for (String path : artifactPathSet.adjustedList()) {
 			if (new File(path).exists()) {
@@ -260,16 +260,23 @@ public class ClassPathChecker {
 	 * @param basePath kann ein Verzeichnis sein aber auch eine einzelne Datei sein (.jar, .class)
 	 */
 	protected void collect(final String basePath) throws Exception {
+		if (propertyHolder == null) {
+
+		}
+		final PathFilterInterface pathFilter = new PathFilter(propertyHolder);
 
 		fileUtils.browseDirTree(basePath, new FileUtils.CallBack() {
 			public void action(String filePath) throws Exception {
+
+				if (!pathFilter.isValid(filePath)) return;
+
 				// z.B. actualPath = "/Volumes/Braeburn/Entwicklung/Software/Sonstiges/ClassPathChecker/bin/com/javacook/classpathchecker/ClassPathChecker.class"
 				if (hasArchiveExtension(filePath)) { // z.B. ".jar"
-					collectArchive(filePath);
+					unpackArchiveAndCollect(filePath);
 				} else {
 					// Abschneiden des basePath ("/Volumes/Braeburn/Entwicklung/Software/Sonstiges/ClassPathChecker/bin") vorne:
 					String temp = truncPrefix(filePath, basePath, true);
-					temp = truncPrefix(temp, FILE_SEPARATOR);
+					temp = truncPrefix(temp, FILE_SEPARATOR	);
 					resourceToOccurence.put(temp, basePath);
 				}
 			}
@@ -277,12 +284,13 @@ public class ClassPathChecker {
 	}// collect
 
 
+
 	/**
 	 * Zerlegen eines Archiv-Files (Jar) und einsammeln der dort enthaltenen Resourcen.
 	 * Sie werden sukzessive in der Map <code>resourceToOccurence</code> abgelegt.
 	 * @param archivePath abs. Pfad eines jar-Files
 	 */
-	protected void collectArchive(String archivePath) throws ZipException, IOException {
+	protected void unpackArchiveAndCollect(String archivePath) throws ZipException, IOException {
 		archives.add(archivePath);
 		ZipFile zipFile = new ZipFile(new File(archivePath));
 		Enumeration<? extends ZipEntry> resourceEntries = zipFile.entries();
@@ -365,9 +373,9 @@ public class ClassPathChecker {
 //            System.out.println(clazz);
 //        }
 
-		System.out.println(new ClassPathChecker().run().xmlReport().save("C:/TEMP/cpc.log"));
-		
-		
+		System.out.println(new ClassPathChecker().run().xmlReport());
+
+
 	}// main
 
 }
