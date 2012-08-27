@@ -81,6 +81,7 @@ public class ClassPathChecker {
 
 
 	public ClassPathChecker(PropertyHolderInterface propertyHolder) throws Exception {
+		// Versuch, an Properties heranzukommen:
 		try {
 			this.propertyHolder = propertyHolder;
 			if (this.propertyHolder == null) {
@@ -94,7 +95,6 @@ public class ClassPathChecker {
 			else {
 				logger.log("Properties loaded successfully from file '"  + propertyHolder.getPropFileName() + "'");
 			}
-			pathFilter = new PathFilter(propertyHolder);
 		}
 		catch (Exception e) {
 			if (logger != null) {
@@ -120,10 +120,14 @@ public class ClassPathChecker {
 	 */
 	public ClassPathChecker run() {
 		try {
+			validatePropertyHolder();
 			logger.log("Start searching for duplicate class path entries...");
+			archives 	= new ArrayList<String>();
+			pathFilter 	= new PathFilter(propertyHolder);
 			handleClassPaths();
 			logger.log("...Success.");
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			logger.log("...Failed!");
 			StringBuilder sb = new StringBuilder();
 			sb.append(e).append(CRLF);
@@ -135,6 +139,7 @@ public class ClassPathChecker {
 		}
 		return this;
 	}
+
 
 	/**
 	 * Erzeugt eine Ausgabe in Form einer XML-Datei
@@ -190,9 +195,11 @@ public class ClassPathChecker {
 
 
 	protected void handleClassPaths() throws Exception {
-		if (propertyHolder == null) throw new IllegalStateException("Cannot process without properties.");
+		validatePropertyHolder();
 
 		PathSet artifactPathSet = new PathSet(pathFilter);
+		// Es werden Keys geladen, ueber die in den System-Properties Klassenpfade gesammelt werden.
+		// Beispiel: "java.class.path"
 		List<String> classPathKeys = propertyHolder.getClassPathKeys();
 
 		if (classPathKeys != null) {
@@ -260,9 +267,8 @@ public class ClassPathChecker {
 	 * @param basePath kann ein Verzeichnis sein aber auch eine einzelne Datei sein (.jar, .class)
 	 */
 	protected void collect(final String basePath) throws Exception {
-		if (propertyHolder == null) {
+		validatePropertyHolder();
 
-		}
 		final PathFilterInterface pathFilter = new PathFilter(propertyHolder);
 
 		fileUtils.browseDirTree(basePath, new FileUtils.CallBack() {
@@ -288,7 +294,7 @@ public class ClassPathChecker {
 	/**
 	 * Zerlegen eines Archiv-Files (Jar) und einsammeln der dort enthaltenen Resourcen.
 	 * Sie werden sukzessive in der Map <code>resourceToOccurence</code> abgelegt.
-	 * @param archivePath abs. Pfad eines jar-Files
+	 * @param archivePath absoluter Pfad eines jar-Files
 	 */
 	protected void unpackArchiveAndCollect(String archivePath) throws ZipException, IOException {
 		archives.add(archivePath);
@@ -345,7 +351,7 @@ public class ClassPathChecker {
 	/**
 	 * Zerteilt einen Klassenpfad durch Doppelpunkt bzw. Semikolon getrennt in seine Bestandteile.
 	 * @param pathChain Beispiel: "/Library/Java/Extensions:/System/Library/Java/Contents/Classes/jsse.jar"
-	 * @return
+	 * @return ["/Library/Java/Extensions", "/System/Library/Java/Contents/Classes/jsse.jar"]
 	 */
 	protected List<String> splitPathChain(String pathChain) {
 		List<String> result = new ArrayList<String>();
@@ -356,6 +362,17 @@ public class ClassPathChecker {
 		return result;
 	}
 
+
+	/*-----------------------------------------------------------------------*\
+	 * Utilities                                                             *
+	\*-----------------------------------------------------------------------*/
+
+
+	private void validatePropertyHolder() throws IllegalStateException {
+		if (propertyHolder == null) {
+			throw new IllegalStateException("Value of 'propertyHolder' is null.");
+		}
+	}
 
 
 	/*-----------------------------------------------------------------------*\
@@ -373,7 +390,7 @@ public class ClassPathChecker {
 //            System.out.println(clazz);
 //        }
 
-		System.out.println(new ClassPathChecker().run().xmlReport());
+		System.out.println(new ClassPathChecker().run().run().xmlReport());
 
 
 	}// main
