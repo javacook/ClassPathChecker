@@ -18,6 +18,10 @@ outputExtensions[2] = xml
 archiveExtensions[0] = jar
 archiveExtensions[1] = zip
 
+# Paths or Archives which are to irgnore
+# Example
+# excludeArtifacts = /System/Library/Java/Extensions/
+
 # Further paths in which classes and archives are searched can be added
 # Example:
 # additionalArtifacts[0] = /Applications/Apache/apache-tomcat-7.0.23/lib/
@@ -28,3 +32,6 @@ logToConsole = true
 # Defines the location of the log file. If omitted then no log file is written
 # Example:
 # logFileName =/Volumes/Braeburn/Entwicklung/Software/Sonstiges/ClassPathChecker/log/cpc.log
+
+# Remarks:
+# It does not matter whether a path ends with a slash or not.
