@@ -259,7 +259,7 @@ public class ClassPathChecker {
 		}
 	}
 
-
+	
 	/**
 	 * Wandert rekursiv das Verzeichnis <code>basePath</code> durch und sucht dort nach Resourcen (alles, was kommt)
 	 * und nach Archiven (Endung .jar oder .zip) und fuegt die Klassen-Funde sukzessive der Map
@@ -268,8 +268,6 @@ public class ClassPathChecker {
 	 */
 	protected void collect(final String basePath) throws Exception {
 		validatePropertyHolder();
-
-		final PathFilterInterface pathFilter = new PathFilter(propertyHolder);
 
 		fileUtils.browseDirTree(basePath, new FileUtils.CallBack() {
 			public void action(String filePath) throws Exception {
@@ -322,6 +320,8 @@ public class ClassPathChecker {
 	 * Checkt, ob die Resource auch wiklich verfuegbar ist aus Sicht des System-Class-Loaders
 	 * TODO: ist das ueberhaupt sinnvoll in Anbetracht verschiedener Class-Loader? Ich glaube nicht.
 	 * Auf einem Windowssystem funktionierte das z.B. nicht.
+	 * Vielleicht sollte man das doch mal tun
+	 * 
 	 */
 	protected boolean isResourceAccessable(String resource) {
 		return true;
@@ -390,7 +390,7 @@ public class ClassPathChecker {
 //            System.out.println(clazz);
 //        }
 
-		System.out.println(new ClassPathChecker().run().run().xmlReport());
+		System.out.println(new ClassPathChecker().run().xmlReport());
 
 
 	}// main

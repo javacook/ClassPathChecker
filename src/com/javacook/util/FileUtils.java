@@ -324,7 +324,7 @@ public class FileUtils
 		try {
 			return new File(path).getCanonicalPath();
 		} catch (java.io.IOException e) {
-			throw new RuntimeException(e);
+			throw new RuntimeException("Fehler bei der Normierung des Pfads '" + path + "'", e);
 		}
 	}
 

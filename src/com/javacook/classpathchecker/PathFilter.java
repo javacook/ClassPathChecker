@@ -42,6 +42,7 @@ public class PathFilter implements PathFilterInterface {
 		if (includeArtifacts != null && includeArtifacts.contains(path)) {
 			return true;
 		}
+		// FIXME 28.08.2012 jvollmer: hier auf Prefixeigenschaft testen: 
 		return excludeArtifacts == null || !excludeArtifacts.contains(path);
 	}
 

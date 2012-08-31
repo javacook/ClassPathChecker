@@ -7,11 +7,21 @@ import java.util.TreeSet;
 
 import com.javacook.util.FileUtils;
 
+/**
+ * Diese Klasse sammelt Pfade ein. Es kann ein Pfadfilter uebgeben werden.
+ * In diesem Fall werden nur bzgl. dieses Filters gueltige Pfade hinzugenommen.
+ * @author jvollmer
+ *
+ */
 public class PathSet extends TreeSet<String> {
 	private static final long serialVersionUID = -8757505877799051559L;
 
 	private final PathFilterInterface pathFilter;
 
+	/**
+	 * Konstruktor
+	 * @param pathFilter null ist erlaubt => keine Filterfunktion
+	 */
 	public PathSet(PathFilterInterface pathFilter) {
 		this.pathFilter = pathFilter;
 	}
@@ -21,7 +31,7 @@ public class PathSet extends TreeSet<String> {
 	public boolean add(String path) {
 		String normalizedPath = FileUtils.normalizePath(path);
 
-		if (pathFilter.isValid(normalizedPath)) {
+		if (pathFilter == null || pathFilter.isValid(normalizedPath)) {
 			return super.add(normalizedPath);
 		}
 		else return false;
