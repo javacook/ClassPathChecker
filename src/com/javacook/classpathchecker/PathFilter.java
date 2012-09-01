@@ -36,14 +36,24 @@ public class PathFilter implements PathFilterInterface {
 	}
 
 
+	/**
+	 * Liefert true, falls <code>path</code> mit aufgenommen werden soll. Das ist
+	 * stets der Fall, falls er in <code>includeArtifacts</code> enthalten ist;
+	 * ansonsten, falls er nicht eine Verlängerung eines Pfads aus
+	 * <code>excludeArtifacts</code> ist.
+	 */
 	public boolean isValid(String path) {
 		path = FileUtils.normalizePath(path);
 
 		if (includeArtifacts != null && includeArtifacts.contains(path)) {
 			return true;
 		}
-		// FIXME 28.08.2012 jvollmer: hier auf Prefixeigenschaft testen: 
-		return excludeArtifacts == null || !excludeArtifacts.contains(path);
+		if (excludeArtifacts != null) {
+			for (String artifact : excludeArtifacts) {
+				if (path.startsWith(artifact)) return false;
+			}
+		}
+		return true;
 	}
 
 }
