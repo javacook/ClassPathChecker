@@ -395,10 +395,8 @@ public class ClassPathChecker {
 
 		ClassPathChecker cpc = new ClassPathChecker();
 		cpc.getPropertyHolder().loadProperties("cpc.properties");
-
-
+		cpc.getPropertyHolder().setLogFileName("/Volumes/Braeburn/Entwicklung/Software/javacook/ClassPathChecker/log/");
 		System.out.println(new ClassPathChecker().run().xmlReport());
-
 
 	}// main
 
