@@ -322,6 +322,7 @@ public class FileUtils
 		path = path.trim();
 		if (path.length() == 0) return null;
 		try {
+			path = path.replace('\\', '/');
 			return new File(path).getCanonicalPath();
 		} catch (java.io.IOException e) {
 			throw new RuntimeException("Fehler bei der Normierung des Pfads '" + path + "'", e);
