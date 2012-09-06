@@ -18,9 +18,11 @@ outputExtensions[2] = xml
 archiveExtensions[0] = jar
 archiveExtensions[1] = zip
 
-# Paths or Archives which are to irgnore
-# Example
-# excludeArtifacts = /System/Library/Java/Extensions/
+# Paths or archives which are to irgnore.
+# Example (all artifacts are irgnored which start with this path)
+# excludeArtifacts[0] = /System/Library/Java/Extensions/
+# excludeArtifacts[1] = C:\\Windows\\Test
+# excludeArtifacts[2] = C:/Windows/Temp
 
 # Further paths in which classes and archives are searched can be added
 # Example:
@@ -34,4 +36,5 @@ logToConsole = true
 # logFileName =/Volumes/Braeburn/Entwicklung/Software/Sonstiges/ClassPathChecker/log/cpc.log
 
 # Remarks:
-# It does not matter whether a path ends with a slash or not.
+# 1. It does not matter whether a path ends with a slash or not.
+# 2. You can use Slashes and Backslashes 

@@ -97,8 +97,16 @@ public class PropertyHolder implements PropertyHolderInterface {
 		return logToConsole;
 	}
 
+	public void setLogToConsole(boolean logToConsole) {
+		this.logToConsole = logToConsole;
+	}
+
 	public String getLogFileName() {
 		return logFileName;
+	}
+
+	public void setLogFileName(String logFileName) {
+		this.logFileName = logFileName;
 	}
 
 	public boolean usingDefaults() {
@@ -160,6 +168,18 @@ public class PropertyHolder implements PropertyHolderInterface {
 
 
 
+	/**
+	 * Liefert zu <code>keyPrefix</code> die Menge aller Properties, deren Key mit
+	 * <code>keyPrefix</code> startet. So liefert bei
+	 * <pre>
+	 * outputExtensions[0] = class
+	 * outputExtensions[1] = properties
+	 * outputExtensions[2] = xml
+	 * </pre>
+	 * die Methode <code>getProperties("outputExtension")</code> die Liste
+	 * <code>["class", "properties", "xml"]</code>.
+	 * @param keyPrefix
+	 */
 	public List<String> getProperties(String keyPrefix) {
 		if (properties == null) {
 			throw new IllegalArgumentException("The value of 'properties' is null.");

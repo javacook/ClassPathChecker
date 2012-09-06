@@ -113,6 +113,10 @@ public class ClassPathChecker {
 	 * public methods                                                        *
 	\*-----------------------------------------------------------------------*/
 
+	public PropertyHolderInterface getPropertyHolder() {
+		return propertyHolder;
+	}
+	
 	/**
 	 * Hier geht los...
 	 * @throws ZipException
@@ -390,6 +394,8 @@ public class ClassPathChecker {
 //            System.out.println(clazz);
 //        }
 
+		ClassPathChecker classPathChecker = new ClassPathChecker();
+		
 		System.out.println(new ClassPathChecker().run().xmlReport());
 
 
