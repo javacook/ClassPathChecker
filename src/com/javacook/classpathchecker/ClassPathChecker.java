@@ -116,7 +116,7 @@ public class ClassPathChecker {
 	public PropertyHolderInterface getPropertyHolder() {
 		return propertyHolder;
 	}
-	
+
 	/**
 	 * Hier geht los...
 	 * @throws ZipException
@@ -263,7 +263,7 @@ public class ClassPathChecker {
 		}
 	}
 
-	
+
 	/**
 	 * Wandert rekursiv das Verzeichnis <code>basePath</code> durch und sucht dort nach Resourcen (alles, was kommt)
 	 * und nach Archiven (Endung .jar oder .zip) und fuegt die Klassen-Funde sukzessive der Map
@@ -325,7 +325,7 @@ public class ClassPathChecker {
 	 * TODO: ist das ueberhaupt sinnvoll in Anbetracht verschiedener Class-Loader? Ich glaube nicht.
 	 * Auf einem Windowssystem funktionierte das z.B. nicht.
 	 * Vielleicht sollte man das doch mal tun
-	 * 
+	 *
 	 */
 	protected boolean isResourceAccessable(String resource) {
 		return true;
@@ -371,7 +371,6 @@ public class ClassPathChecker {
 	 * Utilities                                                             *
 	\*-----------------------------------------------------------------------*/
 
-
 	private void validatePropertyHolder() throws IllegalStateException {
 		if (propertyHolder == null) {
 			throw new IllegalStateException("Value of 'propertyHolder' is null.");
@@ -394,8 +393,10 @@ public class ClassPathChecker {
 //            System.out.println(clazz);
 //        }
 
-		ClassPathChecker classPathChecker = new ClassPathChecker();
-		
+		ClassPathChecker cpc = new ClassPathChecker();
+		cpc.getPropertyHolder().loadProperties("cpc.properties");
+
+
 		System.out.println(new ClassPathChecker().run().xmlReport());
 
 

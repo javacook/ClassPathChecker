@@ -42,7 +42,7 @@ public class PropertyHolder implements PropertyHolderInterface {
 			this.propFileName = "/" + this.propFileName;
 		}
 		try {
-			loadProperties();
+			loadProperties(this.propFileName);
 		} catch (IOException e) {
 			throw e;
 		} finally {
@@ -118,11 +118,9 @@ public class PropertyHolder implements PropertyHolderInterface {
 	}
 
 
-	/*-----------------------------------------------------------------------*\
-	 * internal methods                                                      *
-	\*-----------------------------------------------------------------------*/
-
-	private void loadProperties() throws IOException {
+	public void loadProperties(String propFileName) throws IOException {
+		if (propFileName == null) throw new IllegalArgumentException("Argument 'propFileName' is null.");
+		this.propFileName = propFileName;
 		InputStream propFileStream = ClassPathChecker.class.getResourceAsStream(propFileName);
 		if (propFileStream != null) {
 			properties.load(propFileStream);
@@ -130,6 +128,9 @@ public class PropertyHolder implements PropertyHolderInterface {
 		}
 	}
 
+	/*-----------------------------------------------------------------------*\
+	 * internal methods                                                      *
+	\*-----------------------------------------------------------------------*/
 
 	private void analyseProperties() {
 		classPathKeys = getProperties(PROP_KEY_CLASS_PATH_KEYS);

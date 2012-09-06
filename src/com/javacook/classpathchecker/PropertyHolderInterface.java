@@ -16,9 +16,15 @@ public interface PropertyHolderInterface {
 
 	boolean logToConsole();
 
+	void setLogToConsole(boolean logToConsole);
+
 	String getLogFileName();
 
+	void setLogFileName(String logFileName);
+
 	boolean usingDefaults();
+
+	void loadProperties(String propFileName) throws Exception;
 
 	String getPropFileName();
 
