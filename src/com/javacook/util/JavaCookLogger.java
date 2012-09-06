@@ -14,7 +14,7 @@ public class JavaCookLogger {
 	private boolean logToConsole = true;
 	private String logFileName;
 	private List<String> logEntries;
-	
+
 	/*-----------------------------------------------------------------------*\
 	 * constructors                                                          *
 	\*-----------------------------------------------------------------------*/
@@ -29,7 +29,7 @@ public class JavaCookLogger {
 		this(true, null);
 	}
 
-	
+
 	/*-----------------------------------------------------------------------*\
 	 * public methods                                                        *
 	\*-----------------------------------------------------------------------*/
@@ -61,8 +61,12 @@ public class JavaCookLogger {
 
 	private void append(String logFileName, String mess) {
 		if (logFileName == null)  throw new IllegalArgumentException("Argument 'logFileName' is null.");
+		File logFile = new File(logFileName);
 		FileWriter fileWriter = null;
 		try {
+			if (logFile.isDirectory()) {
+				logFileName = logFile.getCanonicalPath() + "/cpc.log";
+			}
 			fileWriter = new FileWriter(new File(logFileName), true); // true fuer append
 			fileWriter.append(new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date())).append(" - ");
 			fileWriter.append((mess == null)? "null" : mess).append(CRLF);
@@ -78,8 +82,8 @@ public class JavaCookLogger {
 			}
 		}
 	}
-	
-	
+
+
 	/*-----------------------------------------------------------------------*\
 	 * main                                                                  *
 	\*-----------------------------------------------------------------------*/
