@@ -24,6 +24,8 @@ import com.javacook.util.StringUtils;
 
 public class ClassPathChecker {
 
+	public final static String VERSION = "0.1.0";
+	
 	private final static String FILE_SEPARATOR = System.getProperty("file.separator"); // Bei Windows Backslash, ansonsten Slash:
 
 	private final static String CRLF = System.getProperty("line.separator");
@@ -89,6 +91,7 @@ public class ClassPathChecker {
 				throw new IllegalArgumentException("Argument 'propertyHolder' is null.");
 			}
 			logger = new JavaCookLogger(propertyHolder.logToConsole(), propertyHolder.getLogFileName());
+			logger.log("Welcome to ClassPathCecker-"+ VERSION + "!");
 			if (propertyHolder.usingDefaults()) {
 				logger.log("No property file found at '"  + propertyHolder.getPropFileName() + "' => using defaults.");
 			}
@@ -116,6 +119,7 @@ public class ClassPathChecker {
 	public PropertyHolderInterface getPropertyHolder() {
 		return propertyHolder;
 	}
+	
 
 	/**
 	 * Hier geht los...
@@ -392,11 +396,19 @@ public class ClassPathChecker {
 //        for (Class clazz : loadedClasses) {
 //            System.out.println(clazz);
 //        }
+		
+		
 
 		ClassPathChecker cpc = new ClassPathChecker();
-		cpc.getPropertyHolder().loadProperties("cpc.properties");
-		cpc.getPropertyHolder().setLogFileName("/Volumes/Braeburn/Entwicklung/Software/javacook/ClassPathChecker/log/");
-		System.out.println(new ClassPathChecker().run().xmlReport());
+//		cpc.getPropertyHolder().loadProperties("cpc.properties");
+		
+		cpc.getPropertyHolder().getExcludeArtifacts().add("C:/Development/apache-tomcat-5.5.34/common/lib/");
+		cpc.getPropertyHolder().getExcludeArtifacts().add("C:/Development/Workspaces/INDIGO/Loans/lib");
+		cpc.getPropertyHolder().getExcludeArtifacts().add("C:/Program Files/Java/jdk1.6.0_30/jre/lib");
+		cpc.getPropertyHolder().getExcludeArtifacts().add("C:/Development/Workspaces/INDIGO/Loans/classes");		
+		
+		cpc.getPropertyHolder().setLogFileName("C:/TEMP/ClassPathChecker/cpc.log");
+		System.out.println(new ClassPathChecker().run().xmlReport().save("C:/TEMP/ClassPathChecker/cpc.xml"));
 
 	}// main
 
