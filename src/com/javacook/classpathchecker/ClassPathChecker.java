@@ -399,16 +399,14 @@ public class ClassPathChecker {
 		
 		
 
-		ClassPathChecker cpc = new ClassPathChecker();
-//		cpc.getPropertyHolder().loadProperties("cpc.properties");
+		PropertyHolderInterface propertyHolder = PropertyHolder.getInstance();
+		propertyHolder.getExcludeArtifacts().add("C:/Development/apache-tomcat-5.5.34/common/lib/");
+		propertyHolder.getExcludeArtifacts().add("C:/Development/Workspaces/INDIGO/Loans/lib");
+		propertyHolder.getExcludeArtifacts().add("C:/Program Files/Java/jdk1.6.0_30/jre/lib");
+		propertyHolder.getExcludeArtifacts().add("C:/Development/Workspaces/INDIGO/Loans/classes");	
+		propertyHolder.setLogFileName("C:/TEMP/ClassPathChecker/cpc.log");
 		
-		cpc.getPropertyHolder().getExcludeArtifacts().add("C:/Development/apache-tomcat-5.5.34/common/lib/");
-		cpc.getPropertyHolder().getExcludeArtifacts().add("C:/Development/Workspaces/INDIGO/Loans/lib");
-		cpc.getPropertyHolder().getExcludeArtifacts().add("C:/Program Files/Java/jdk1.6.0_30/jre/lib");
-		cpc.getPropertyHolder().getExcludeArtifacts().add("C:/Development/Workspaces/INDIGO/Loans/classes");		
-		
-		cpc.getPropertyHolder().setLogFileName("C:/TEMP/ClassPathChecker/cpc.log");
-		System.out.println(new ClassPathChecker().run().xmlReport().save("C:/TEMP/ClassPathChecker/cpc.xml"));
+		System.out.println(new ClassPathChecker(propertyHolder).run().xmlReport().save("C:/TEMP/ClassPathChecker/cpc.xml"));
 
 	}// main
 
