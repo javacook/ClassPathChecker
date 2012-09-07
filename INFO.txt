@@ -1,0 +1,7 @@
+This Software is available under:
+
+SSH:            git@github.com:javacook/ClassPathChecker.git
+Git Read only:  git://github.com/javacook/ClassPathChecker.git
+HTTP:           https://github.com/javacook/ClassPathChecker.git
+
+Questions are answered by javacook@gmx.de
