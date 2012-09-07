@@ -51,7 +51,7 @@ public class PropertyHolder implements PropertyHolderInterface {
 	}
 
 
-	public PropertyHolder() throws Exception {
+	private PropertyHolder() throws Exception {
 		this(null);
 	}
 
@@ -69,6 +69,10 @@ public class PropertyHolder implements PropertyHolderInterface {
 	}
 
 
+	public static synchronized PropertyHolderInterface create(String profileName) throws Exception {
+		return instance = new PropertyHolder(profileName);
+	}
+	
 	/*-----------------------------------------------------------------------*\
 	 * public methods                                                        *
 	\*-----------------------------------------------------------------------*/
