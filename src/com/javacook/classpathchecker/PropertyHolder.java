@@ -51,7 +51,7 @@ public class PropertyHolder implements PropertyHolderInterface {
 	}
 
 
-	private PropertyHolder() throws Exception {
+	public PropertyHolder() throws Exception {
 		this(null);
 	}
 
